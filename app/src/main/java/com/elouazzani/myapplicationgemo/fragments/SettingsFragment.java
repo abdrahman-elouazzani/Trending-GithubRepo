@@ -7,6 +7,9 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.elouazzani.myapplicationgemo.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
+    public SettingsFragment() {
+
+    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
