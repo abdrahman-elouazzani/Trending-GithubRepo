@@ -10,6 +10,6 @@ import rx.Observable;
 
 public interface GitHubService {
     @GET("search/repositories?q=created:>2017-10-22&sort=stars&order=desc")
-    Observable<List<GitHubRepo>> getStarredRepositories();
+    Observable<GitHubRepo> getTrendingRepositories();
 
 }

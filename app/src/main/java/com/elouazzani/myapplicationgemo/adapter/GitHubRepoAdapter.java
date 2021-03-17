@@ -8,21 +8,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.elouazzani.myapplicationgemo.R;
 import com.elouazzani.myapplicationgemo.model.GitHubRepo;
+import com.elouazzani.myapplicationgemo.model.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.ViewHolder> {
     Context context;
-    private List<GitHubRepo> repList;
+    private List<Item> repList;
 
-    public GitHubRepoAdapter(Context context, List<GitHubRepo> repList) {
+    public GitHubRepoAdapter(Context context) {
+        repList=new ArrayList<>();
         this.context=context;
-        this.repList=repList;
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,19 +55,28 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull GitHubRepoAdapter.ViewHolder holder, int position) {
-        final GitHubRepo repository= repList.get(position);
+        final Item repository= repList.get(position);
 
         if (repository!=null) {
             holder.repNameText.setText(repository.getName());
             holder.repDescriptionText.setText(repository.getDescription());
-            holder.usernameText.setText(repository.getLogin());
-            holder.nbrStarsText.setText(String.format("%.1f",repository.getStargazersCount()));
-            Glide.with(context).load(repository.getAvatar_url()).into(holder.avatar);
+            holder.usernameText.setText(repository.getOwner().getLogin());
+            holder.nbrStarsText.setText(""+repository.getStargazersCount());
+            Glide.with(context).load(repository.getOwner().getAvatar_url()).into(holder.avatar);
 
 
         }
 
     }
+    public void setGitHubRepos(@Nullable List<Item> repos) {
+        if (repos == null) {
+            return;
+        }
+        repList.clear();
+        repList.addAll(repos);
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {

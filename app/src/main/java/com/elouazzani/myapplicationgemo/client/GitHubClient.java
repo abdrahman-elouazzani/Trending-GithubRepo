@@ -37,8 +37,8 @@ public class GitHubClient {
         return instance;
     }
     //
-    public Observable<List<GitHubRepo>> getTrendingRepos() {
-        return gitHubService.getStarredRepositories();
+    public Observable<GitHubRepo> getTrendingRepos() {
+        return gitHubService.getTrendingRepositories();
     }
 }
 
