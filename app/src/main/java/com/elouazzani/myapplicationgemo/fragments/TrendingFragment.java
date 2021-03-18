@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.elouazzani.myapplicationgemo.MainActivity;
 import com.elouazzani.myapplicationgemo.R;
@@ -66,15 +67,15 @@ public class TrendingFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         repositoryAdapter=new GitHubRepoAdapter(getContext());
         recyclerView.setAdapter(repositoryAdapter);
-        getTrendingRepo();
         pagination();
+        getTrendingRepo();
+
         return view;
 
     }
     private void getTrendingRepo() {
         /* getTrendingRepo return Observable<List<GitHubRepo>> return stream of data
          * subscription is a observer of steam
-         * the operator is the retrofit interface
          */
         subscription= GitHubClient.getInstance().getTrendingRepos(page_number)
                 .subscribeOn(Schedulers.io())
@@ -134,6 +135,13 @@ public class TrendingFragment extends Fragment {
     // load data from next page
     private void getNext() {
         getTrendingRepo();
+    }
+
+    @Override
+    public void onStop() {
+        Toast.makeText(getContext(),"On stop",Toast.LENGTH_SHORT).show();
+        page_number=1;
+        super.onStop();
     }
 
     @Override
