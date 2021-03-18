@@ -6,10 +6,11 @@ import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 public interface GitHubService {
-    @GET("search/repositories?q=created:>2017-10-22&sort=stars&order=desc")
-    Observable<GitHubRepo> getTrendingRepositories();
+    @GET("search/repositories?q=created:>2017-10-22&sort=stars&order=desc&")
+    Observable<GitHubRepo> getTrendingRepositories(@Query("page") int page_number);
 
 }

@@ -37,8 +37,8 @@ public class GitHubClient {
         return instance;
     }
     //
-    public Observable<GitHubRepo> getTrendingRepos() {
-        return gitHubService.getTrendingRepositories();
+    public Observable<GitHubRepo> getTrendingRepos(int page_number) {
+        return gitHubService.getTrendingRepositories(page_number);
     }
 }
 

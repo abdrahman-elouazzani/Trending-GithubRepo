@@ -72,7 +72,7 @@ public class GitHubRepoAdapter extends RecyclerView.Adapter<GitHubRepoAdapter.Vi
         if (repos == null) {
             return;
         }
-        repList.clear();
+        //repList.clear();
         repList.addAll(repos);
         notifyDataSetChanged();
     }

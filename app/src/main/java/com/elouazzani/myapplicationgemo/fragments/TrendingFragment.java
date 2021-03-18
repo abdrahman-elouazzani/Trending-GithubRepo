@@ -2,6 +2,7 @@ package com.elouazzani.myapplicationgemo.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +29,7 @@ import rx.schedulers.Schedulers;
 
 
 public class TrendingFragment extends Fragment {
-    // TODO: Rename and change types of para
+
     private GitHubRepoAdapter repositoryAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -36,6 +37,13 @@ public class TrendingFragment extends Fragment {
     private Subscription subscription;
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    // pagination
+    private int page_number=1;
+    private int firstVisibleItem;
+    private int totalItemCount;
+    private int visibleItemCount;
+    private int previousTotal;
+    private boolean load=true;
 
     public TrendingFragment() {
         // Required empty public constructor
@@ -49,6 +57,7 @@ public class TrendingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_trending, container, false);
         layoutManager=new LinearLayoutManager(getContext());
         repList =new ArrayList<>();
@@ -58,7 +67,7 @@ public class TrendingFragment extends Fragment {
         repositoryAdapter=new GitHubRepoAdapter(getContext());
         recyclerView.setAdapter(repositoryAdapter);
         getTrendingRepo();
-        // Inflate the layout for this fragment
+        pagination();
         return view;
 
     }
@@ -67,7 +76,7 @@ public class TrendingFragment extends Fragment {
          * subscription is a observer of steam
          * the operator is the retrofit interface
          */
-        subscription= GitHubClient.getInstance().getTrendingRepos()
+        subscription= GitHubClient.getInstance().getTrendingRepos(page_number)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<GitHubRepo>() {
@@ -82,12 +91,49 @@ public class TrendingFragment extends Fragment {
 
                     @Override public void onNext(GitHubRepo gitHubRepos) {
                         repList=gitHubRepos.getItems();
-                        Log.d(TAG, "In onNext()"+repList.toString());
+                        Log.d(TAG, "In onNext()"+" page="+page_number+" data="+repList.toString());
                         repositoryAdapter.setGitHubRepos(repList);
+                        Log.d(TAG, "rep list size="+repositoryAdapter.getItemCount());
                     }
                 });
 
 
+    }
+    // recycler view pagination
+    private void pagination() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                firstVisibleItem=layoutManager.findFirstVisibleItemPosition();
+                totalItemCount=layoutManager.getChildCount();
+                visibleItemCount=layoutManager.getItemCount();
+
+                if (load) {
+                    if(totalItemCount>previousTotal) {
+                        previousTotal=totalItemCount;
+                        page_number++;
+                        load=false;
+                    }
+                }
+
+                if(!load && (visibleItemCount+firstVisibleItem)>=totalItemCount) {
+                    getNext();
+                    load=true;
+                    Log.v("tag","Page Number:"+page_number);
+                }
+            }
+        });
+    }
+
+    // load data from next page
+    private void getNext() {
+        getTrendingRepo();
     }
 
     @Override
