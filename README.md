@@ -27,3 +27,9 @@ git clone git@github.com:abdrahman-elouazzani/Trending-GithubRepo.git
   2. [The library Gson](https://github.com/google/gson) to create the JSON-OBJECT-REAUEST and JSON-ARRAY, JSON-OBECT for Parsing the data.
   3. [Rxjava].
   ... <br/>
+  
+## The Previews 
+
+![Screenshot_1616087622](https://user-images.githubusercontent.com/40376977/111669071-b444d500-8816-11eb-9426-28136493576a.png)
+![Screenshot_1616087632](https://user-images.githubusercontent.com/40376977/111669082-b73fc580-8816-11eb-8b5d-0ee71610bb39.png)
+![Screenshot_1616087639](https://user-images.githubusercontent.com/40376977/111669088-b870f280-8816-11eb-9b96-dc51f8503835.png)
